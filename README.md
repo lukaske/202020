@@ -1,67 +1,46 @@
 <div align="center">
 
-<img src="assets/logo.png" width="128" alt="20-20-20">
+<img src="assets/logo.png" width="112" alt="20-20-20">
 
 # 20-20-20
 
 **Every 20 minutes, look at something 20 feet away for 20 seconds.**
+A macOS menu bar app that makes the rule hard to ignore and easy to live with.
 
-A small macOS menu bar app that makes the 20-20-20 rule hard to ignore
-and easy to live with.
+[![Download for macOS](https://img.shields.io/badge/Download%20for%20macOS-202020.app-1d1d1f?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/lukaske/202020/releases/latest/download/202020.app.zip)
 
 [![macOS 13+](https://img.shields.io/badge/macOS-13%2B-1d1d1f)](https://www.apple.com/macos/)
 [![Swift 5](https://img.shields.io/badge/Swift-5-f05138)](https://swift.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-4c8eda)](LICENSE)
 [![No dependencies](https://img.shields.io/badge/dependencies-none-4c9a68)](#building)
 
-</div>
+<img src="assets/break-screen.png" width="680" alt="The break overlay: a dark sheet with a countdown ring, the words Look away, and a Hold to skip button">
 
----
+</div>
 
 ## Why
 
-Staring at a screen all day means your eyes hold one focal distance for hours.
-The 20-20-20 rule is the standard advice for that: every 20 minutes, spend 20
-seconds looking at something roughly 20 feet away.
-
-The problem with reminders is that you dismiss them. So this one covers the
-screen — there is nothing to read, nothing to do, and no reason not to look out
-of the window.
+Reminders get dismissed. This one covers every display instead — nothing to read,
+nothing to do, no reason not to look out of the window.
 
 **And you don't have to watch it.** A soft falling chime plays when the break
 starts and a brighter rising one when it ends, so you can turn your head, rest
 your eyes properly, and let the sound tell you when it's safe to look back.
 
-<div align="center">
-<img src="assets/break-screen.png" width="720" alt="The break overlay: a dark sheet with a countdown ring, the words Look away, and a Hold to skip button">
-</div>
-
 ## Install
 
-**Download** the latest `202020.app.zip` from
-[Releases](../../releases/latest), unzip it, and drag it to `/Applications`.
-
-The app is signed ad-hoc rather than with a paid Apple Developer certificate, so
-the first launch needs one extra step: **right-click the app → Open**, then
-confirm. macOS remembers the choice. (Or `xattr -d com.apple.quarantine
-/Applications/202020.app` from a terminal.)
-
-**Or build it yourself** — it takes a couple of seconds and skips the Gatekeeper
-dance entirely:
+[Download](https://github.com/lukaske/202020/releases/latest/download/202020.app.zip),
+unzip, drag to `/Applications`. It's ad-hoc signed rather than notarized, so the
+first launch needs **right-click → Open** once. Or build it and skip that:
 
 ```sh
-git clone https://github.com/lukaske/202020.git
-cd 202020
-./build.sh --install
+git clone https://github.com/lukaske/202020.git && cd 202020 && ./build.sh --install
 ```
 
-Then click the eye icon → **Settings → Start at login**. Enable it *after* the
-app is in its final location: macOS records where the app was when you
-registered it.
+Then: eye icon → **Settings → Start at login** — after the app is in its final
+location, since macOS records where it was when you registered it.
 
-## Using it
-
-Everything lives in the menu bar icon.
+## The menu
 
 | | |
 |---|---|
@@ -69,51 +48,34 @@ Everything lives in the menu bar icon.
 | **Take a break now** | Start one immediately. |
 | **Mute sounds** | Silences both chimes. Breaks still happen — muting isn't switching it off. |
 | **Volume** | Let go of the knob and it plays the "look back" tone, so you hear what you picked. |
-| **Settings** | Interval (15–60 min), break length (20–60 s), how much of the screen is covered, a menu-bar countdown, and **Start at login**. |
+| **Settings** | Interval (15–60 min), break length (20–60 s), screen cover, menu-bar countdown, start at login. |
 
-### Skipping
+**Skipping.** The overlay has a *Hold to skip* button, and `esc` does the same —
+either way it takes a deliberate 1.5-second hold, so a stray click does nothing.
+It's a plain grey outline parked well away from the countdown: findable when you
+need it, ignorable when you don't. Skipping doesn't buy you a longer stretch
+before the next break.
 
-The overlay has a **Hold to skip** button, and `esc` does the same thing. Either
-way it takes a deliberate second-and-a-half hold — a stray click or keypress
-does nothing.
-
-It's drawn as a plain grey outline with no fill, parked well away from the
-countdown. Easy to find when you genuinely need it, easy to ignore when you
-don't. Skipping doesn't buy you a longer stretch before the next break, so
-there's nothing to game.
-
-### It stays out of the way
-
-- **Away from your desk** when a break comes due? It's dropped, not queued. Your
-  eyes already got their rest, and you won't come back to a screen full of
-  overlay.
-- **Screen locked, display asleep, or the Mac was sleeping?** Same — and the
-  clock restarts from a full interval when you come back.
-- **Multiple displays** are all covered, so you can't just look at the other
-  monitor.
+**Staying out of the way.** Breaks are dropped rather than queued if you were away
+from the keyboard, or the screen was locked or asleep — so you never come back to
+a screen full of overlay. All displays are covered, so you can't just look at the
+other monitor.
 
 ## Battery
 
-This runs all day on a laptop, so the waiting phase is built to cost nothing:
+It runs all day, so waiting costs nothing: **one timer scheduled directly on the
+next break** with a 30-second tolerance, not a per-second poll. Second-by-second
+updates run only while the menu is open, the optional menu-bar countdown ticks
+every 15 seconds, and switching it off invalidates every timer. During a break the
+overlay repaints a small centred view at 10 fps, never the whole display.
 
-- One timer, **scheduled directly on the next break** — not a per-second poll.
-  It carries a 30-second tolerance so macOS coalesces the wakeup with others
-  instead of waking the CPU on its own.
-- Per-second updates exist **only while the menu is open**.
-- The optional menu-bar countdown ticks **once every 15 seconds**, switching to
-  seconds only in the final minute.
-- Turning the switch off invalidates every timer. The app is then inert.
-- During a break the overlay repaints a **small centred view at 10 fps**, never
-  the whole display — the dark background is drawn once and cached as a layer.
-
-Measured: **0.00 seconds of CPU over 120 seconds idle**, ~44 MB resident.
+Measured: **0.00 s of CPU over 120 s idle**, ~44 MB resident.
 
 ## Building
 
-Needs macOS 13+ and the Swift toolchain from the Xcode Command Line Tools
-(`xcode-select --install`). No Xcode project, no package manager, no
-dependencies — `build.sh` compiles the sources, lays out the bundle, draws the
-icon and ad-hoc signs it.
+Needs macOS 13+ and the Command Line Tools (`xcode-select --install`). No Xcode
+project, no package manager, no dependencies — `build.sh` compiles, lays out the
+bundle, draws the icon and ad-hoc signs it.
 
 ```sh
 ./build.sh            # build into ./build/202020.app
@@ -133,18 +95,15 @@ Sources/
   VolumeMenuItemView.swift the volume slider in the menu
   LaunchAtLogin.swift      SMAppService login item
 Tools/MakeIcon.swift       draws the app icon at build time
-build.sh                   compile, bundle, ad-hoc sign
 ```
 
-A few decisions worth knowing if you're reading the source:
-
-- **The chimes are synthesised**, not sampled — a couple of decaying sine
-  partials written into a WAV in memory. Nothing to ship, and they sound the
-  same on every machine regardless of which system sounds are installed.
-- **The volume slider position is squared** to get an amplitude. A linear
-  amplitude slider crowds every useful level into the last third of its travel.
-- **Digits are centred on their cap height**, not their line box, which reserves
-  descender space they don't use and would sit them visibly low in the ring.
+Three details that look odd until you know why: the chimes are **synthesised** as
+decaying sine partials into an in-memory WAV, so they sound identical everywhere
+and there's nothing to ship; the volume slider position is **squared** to get an
+amplitude, because a linear one crowds every useful level into the last third of
+its travel; and the countdown digits are centred on their **cap height**, not
+their line box, which reserves descender space they don't use and would sit them
+visibly low in the ring.
 
 ## License
 
