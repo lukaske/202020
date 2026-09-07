@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/logo.png" width="128" alt="202020">
+<img src="assets/logo.png" width="128" alt="20-20-20">
 
-# 202020
+# 20-20-20
 
 **Every 20 minutes, look at something 20 feet away for 20 seconds.**
 
